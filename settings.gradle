@@ -1,0 +1,2 @@
+rootProject.name='NeOpenGLBigEyes'
+include ':app'
