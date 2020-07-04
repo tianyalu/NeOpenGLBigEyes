@@ -2,6 +2,7 @@ package com.sty.ne.opengl.bigeyes;
 
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.opengl.EGL14;
 import android.opengl.EGLContext;
 import android.opengl.GLSurfaceView;
@@ -9,10 +10,12 @@ import android.os.Environment;
 import android.util.Log;
 
 
+import com.sty.ne.opengl.bigeyes.face.FaceTrack;
 import com.sty.ne.opengl.bigeyes.filter.CameraFilter;
 import com.sty.ne.opengl.bigeyes.filter.ScreenFilter;
 import com.sty.ne.opengl.bigeyes.record.MyMediaRecorder;
 import com.sty.ne.opengl.bigeyes.util.CameraHelper;
+import com.sty.ne.opengl.bigeyes.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +28,10 @@ import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glGenTextures;
 
-class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
+class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener,
+        Camera.PreviewCallback {
+    private static final String FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
+            + "/sty/";
     private CameraHelper mCameraHelper;
     private MyGLSurfaceView myGLSurfaceView;
     private int[] mTextureID;
@@ -34,9 +40,26 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
     private ScreenFilter mScreenFilter;
     private float[] mtx = new float[16];
     private MyMediaRecorder mMediaRecorder;
+    private FaceTrack mFaceTrack;
+    private int mWidth;
+    private int mHeight;
+    private String modelFileName;
+    private String seetaFileName;
 
     public MyGLRender(MyGLSurfaceView myGLSurfaceView) {
         this.myGLSurfaceView = myGLSurfaceView;
+        //拷贝模型文件到SD卡
+        String filePath = FILE_PATH + "big_eyes";
+        File dirPath = new File(filePath);
+        if(!dirPath.exists()) {
+            dirPath.mkdirs();
+        }
+        modelFileName = filePath + File.separator + "lbpcascade_frontalface.xml";
+        FileUtil.copyAssets2SDCard(myGLSurfaceView.getContext(), "lbpcascade_frontalface.xml",
+                modelFileName);
+        seetaFileName = filePath = File.separator + "seeta_fa_v1.1.bin";
+        FileUtil.copyAssets2SDCard(myGLSurfaceView.getContext(), "seeta_fa_v1.1.bin",
+                seetaFileName);
     }
 
     /**
@@ -59,8 +82,7 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
         mScreenFilter = new ScreenFilter(myGLSurfaceView.getContext());
 
         EGLContext eglContext = EGL14.eglGetCurrentContext();
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/sty/screen_record";
+        String filePath = FILE_PATH + "screen_record";
         File dirPath = new File(filePath);
         if(!dirPath.exists()) {
             dirPath.mkdirs();
@@ -80,6 +102,10 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
      */
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
+        //创建人脸检测跟踪器
+        mFaceTrack = new FaceTrack(modelFileName, seetaFileName, mCameraHelper);
+        mFaceTrack.startTrack(); //启动跟踪器
+
         mCameraHelper.startPreview(mSurfaceTexture);
         mCameraFilter.onReady(width, height);
         mScreenFilter.onReady(width, height);
@@ -125,7 +151,8 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
     }
 
     public void surfaceDestroyed() {
-        mCameraHelper.stopPreview();
+        mCameraHelper.stopPreview(); //停止相机预览
+        mFaceTrack.stopTrack(); //停止人脸跟踪
     }
 
     /**
@@ -147,5 +174,18 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
     public void stopRecording() {
         Log.d("sty", "stopRecording");
         mMediaRecorder.stop();
+    }
+
+    /**
+     * 开启大眼特效
+     * @param isChecked
+     */
+    public void enableBigEye(boolean isChecked) {
+
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        mFaceTrack.detector(data);
     }
 }
