@@ -45,6 +45,7 @@ public class FaceTrack {
             public void handleMessage(@NonNull Message msg) {
                 //子线程耗时再久也不会对其他地方（如：opengl绘制线程）产生影响
                 synchronized (FaceTrack.this) {
+//                    Log.d("sty", "native_detector------>");
                     //定位线程中检测
                     mFace = native_detector(self, (byte[]) msg.obj, mCameraHelper.getmCameraID(),
                             mCameraHelper.getmWidth(), mCameraHelper.getmHeight());
@@ -76,6 +77,10 @@ public class FaceTrack {
         Message message = mHandler.obtainMessage(11);
         message.obj = data;
         mHandler.sendMessage(message);
+    }
+
+    public Face getFace() {
+        return mFace;
     }
 
     private native long native_create(String face_model, String seeta);

@@ -2,6 +2,9 @@ package com.sty.ne.opengl.bigeyes;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -16,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private MyGLSurfaceView mGLSurfaceView;
     private MyRecordButton mRecordButton;
     private RadioGroup rgRecordSpeed;
+    private CheckBox cbBigEyes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         mGLSurfaceView = findViewById(R.id.gl_surface_view);
         mRecordButton = findViewById(R.id.btn_record);
         rgRecordSpeed = findViewById(R.id.rg_record_speed);
+        cbBigEyes = findViewById(R.id.cb_big_eyes);
 
         mRecordButton.setOnRecordListener(new MyRecordButton.OnRecordListener() {
             @Override
@@ -73,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        cbBigEyes.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("sty", "isChecked: " + isChecked );
+                mGLSurfaceView.enableBigEyes(isChecked);
+            }
+        });
+
     }
 
     @Override

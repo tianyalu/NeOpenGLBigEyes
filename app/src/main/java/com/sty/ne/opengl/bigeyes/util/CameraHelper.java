@@ -50,24 +50,25 @@ public class CameraHelper implements Camera.PreviewCallback, SurfaceHolder.Callb
         this.mSurfaceHolder.addCallback(this);
     }
 
-    //虽然执行了setPreviewOrientation(parameters)，屏幕中的图像正常了
+    //虽然执行了setPreviewOrientation(parameters)，屏幕中的图像正常了 --> 这里不做旋转，由底层代码来旋转
     //但此时回调中data中的数据仍然是没有旋转过的
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
 //        Log.i(TAG, "onPreviewFrame");
-        switch (mRotation) {
-            case Surface.ROTATION_0:
-                rotation90(data);
-                break;
-            case Surface.ROTATION_90: //横屏，左边是头部（home键在右边）
-                break;
-            case Surface.ROTATION_270: //横屏，头部在右边
-                break;
-            default:
-                break;
-        }
+//        switch (mRotation) {
+//            case Surface.ROTATION_0:
+//                rotation90(data);
+//                break;
+//            case Surface.ROTATION_90: //横屏，左边是头部（home键在右边）
+//                break;
+//            case Surface.ROTATION_270: //横屏，头部在右边
+//                break;
+//            default:
+//                break;
+//        }
         if (mPreviewCallback != null) {
-            mPreviewCallback.onPreviewFrame(cameraBuffer_, camera);
+//            mPreviewCallback.onPreviewFrame(cameraBuffer_, camera);
+            mPreviewCallback.onPreviewFrame(data, camera);
         }
         camera.addCallbackBuffer(cameraBuffer);
     }

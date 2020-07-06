@@ -69,4 +69,12 @@ public class MyGLSurfaceView extends GLSurfaceView {
     public void stopRecording() {
         mRender.stopRecording();
     }
+
+    /**
+     * 开启大眼特效
+     * @param isChecked
+     */
+    public void enableBigEyes(boolean isChecked) {
+        mRender.enableBigEye(isChecked);
+    }
 }

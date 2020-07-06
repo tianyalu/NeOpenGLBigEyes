@@ -28,7 +28,7 @@ void FaceTrack::stopTracking() {
 /**
  * 人脸追踪检测
  * @param src  待检测图像
- * @param rects  检测结果（人脸矩形框）
+ * @param rects  检测结果（人脸矩形框+5个特征点矩形）
  */
 void FaceTrack::detector(Mat src, vector<Rect2f> &rects) {
     vector<Rect> faces;
@@ -53,6 +53,11 @@ void FaceTrack::detector(Mat src, vector<Rect2f> &rects) {
         seeta::FacialLandmark points[5];
 
         faceAlignment->PointDetectLandmarks(image_data, faceInfo, points);
+
+        //统一把5个特征点也转成rect
+        for (int i = 0; i < 5; ++i) {
+            rects.push_back(Rect2f(points[i].x, points[i].y, 0, 0));
+        }
     }
 
 

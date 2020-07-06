@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.sty.ne.opengl.screenrecord.MyGLSurfaceView
+    <com.sty.ne.opengl.bigeyes.MyGLSurfaceView
         android:id="@+id/gl_surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -67,7 +67,7 @@
             android:textColor="@drawable/rbtn_record_speed_text"/>
     </RadioGroup>
 
-    <com.sty.ne.opengl.screenrecord.MyRecordButton
+    <com.sty.ne.opengl.bigeyes.MyRecordButton
         android:id="@+id/btn_record"
         android:layout_width="80dp"
         android:layout_height="80dp"

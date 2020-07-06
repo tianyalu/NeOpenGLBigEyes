@@ -61,7 +61,7 @@ Java_com_sty_ne_opengl_bigeyes_face_FaceTrack_native_1detector(JNIEnv *env, jobj
     //摄像头数据data转成 OpenCV的 Mat
     Mat src(height + height / 2, width, CV_8UC1, data);
 
-    imwrite("/storage/emulate/0/sty/big_eyes/camera.jpg", src); //摄像头原始图像
+    imwrite("/storage/emulated/0/sty/big_eyes/camera.jpg", src); //摄像头原始图像
     cvtColor(src, src, CV_YUV2RGBA_NV21);
     if(camera_id == 1) { //前置
         rotate(src, src, ROTATE_90_COUNTERCLOCKWISE); //逆时针90度
@@ -101,12 +101,13 @@ Java_com_sty_ne_opengl_bigeyes_face_FaceTrack_native_1detector(JNIEnv *env, jobj
         jobject face = env->NewObject(clazz, construct, faceWidth, faceHeight, imgWidth, imgHeight,
                 floatArray);
         //画人脸矩形
-        rectangle(src, faceRect, Scalar(255, 255, 255));
+//        rectangle(src, faceRect, Scalar(255, 255, 255));
+        rectangle(src, faceRect, Scalar(255, 0, 0));
         for (int i = 1; i < ret; ++i) {
             circle(src, Point2f(rects[i].x, rects[i].y), 5, Scalar(0, 255, 0));
         }
 
-        imwrite("/storage/emulate/0/sty/big_eyes/face.jpg", src); //画了人脸的图像
+        imwrite("/storage/emulated/0/sty/big_eyes/face.jpg", src); //画了人脸的图像
         return face;
     }
     src.release();

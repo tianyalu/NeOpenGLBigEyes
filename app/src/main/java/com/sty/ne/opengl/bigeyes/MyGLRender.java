@@ -11,6 +11,7 @@ import android.util.Log;
 
 
 import com.sty.ne.opengl.bigeyes.face.FaceTrack;
+import com.sty.ne.opengl.bigeyes.filter.BigEyeFilter;
 import com.sty.ne.opengl.bigeyes.filter.CameraFilter;
 import com.sty.ne.opengl.bigeyes.filter.ScreenFilter;
 import com.sty.ne.opengl.bigeyes.record.MyMediaRecorder;
@@ -37,6 +38,7 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
     private int[] mTextureID;
     private SurfaceTexture mSurfaceTexture;
     private CameraFilter mCameraFilter;
+    private BigEyeFilter mBigEyeFilter;
     private ScreenFilter mScreenFilter;
     private float[] mtx = new float[16];
     private MyMediaRecorder mMediaRecorder;
@@ -57,7 +59,7 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
         modelFileName = filePath + File.separator + "lbpcascade_frontalface.xml";
         FileUtil.copyAssets2SDCard(myGLSurfaceView.getContext(), "lbpcascade_frontalface.xml",
                 modelFileName);
-        seetaFileName = filePath = File.separator + "seeta_fa_v1.1.bin";
+        seetaFileName = filePath + File.separator + "seeta_fa_v1.1.bin";
         FileUtil.copyAssets2SDCard(myGLSurfaceView.getContext(), "seeta_fa_v1.1.bin",
                 seetaFileName);
     }
@@ -70,6 +72,8 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         mCameraHelper = new CameraHelper((Activity) myGLSurfaceView.getContext());
+        mCameraHelper.setPreviewCallback(this);
+
         //准备画布
         mTextureID = new int[1];
         //第三个参数表示你要使用mTextureID数组中那个ID的索引
@@ -102,6 +106,9 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
      */
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
+        mWidth = width;
+        mHeight = height;
+
         //创建人脸检测跟踪器
         mFaceTrack = new FaceTrack(modelFileName, seetaFileName, mCameraHelper);
         mFaceTrack.startTrack(); //启动跟踪器
@@ -135,6 +142,10 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
         //int bTextureId = bbbFilter.onDrawFrame(aTextureId);//渲染到FBO
         //int cTextureId = cccFilter.onDrawFrame(bTextureId);//渲染到FBO
         //...
+        if(null != mBigEyeFilter){
+            mBigEyeFilter.setFace(mFaceTrack.getFace());
+            textureId = mBigEyeFilter.onDrawFrame(textureId);
+        }
         mScreenFilter.onDrawFrame(textureId); //渲染到屏幕 textureId : cTextureId
 
         //渲染录制
@@ -180,8 +191,20 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
      * 开启大眼特效
      * @param isChecked
      */
-    public void enableBigEye(boolean isChecked) {
-
+    public void enableBigEye(final boolean isChecked) {
+        //mBigEyeFilter = new BigEyeFilter(myGLSurfaceView.getContext()); //应该在GLThread中
+        myGLSurfaceView.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                if(isChecked) {
+                    mBigEyeFilter = new BigEyeFilter(myGLSurfaceView.getContext());
+                    mBigEyeFilter.onReady(mWidth, mHeight);
+                }else {
+                    mBigEyeFilter.release();
+                    mBigEyeFilter = null;
+                }
+            }
+        });
     }
 
     @Override
