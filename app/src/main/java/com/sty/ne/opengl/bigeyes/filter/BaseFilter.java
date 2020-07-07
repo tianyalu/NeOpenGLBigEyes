@@ -40,17 +40,18 @@ public class BaseFilter {
         mVertexBuffer = BufferHelper.getFloatBuffer(VERTEX);
 
         //参考：https://www.jianshu.com/p/c4dda6884655  Android屏幕坐标系.png
+        //todo 疑问： 这里偷偷地改回去了，但大眼滤镜效果反而是正常的，百思不得其解
         float[] TEXTURE = {
-//                0.0f, 1.0f, //左下
-//                1.0f, 1.0f, //右下
-//                0.0f, 0.0f, //左上
-//                1.0f, 0.0f  //右上
+                0.0f, 1.0f, //左下
+                1.0f, 1.0f, //右下
+                0.0f, 0.0f, //左上
+                1.0f, 0.0f  //右上
 
                 //因为是反的，所以要逆时针旋转180度，并且左右镜像。
-                0.0f, 0.0f, //左下
-                1.0f, 0.0f, //右下
-                0.0f, 1.0f, //左上
-                1.0f, 1.0f  //右上
+//                0.0f, 0.0f, //左下
+//                1.0f, 0.0f, //右下
+//                0.0f, 1.0f, //左上
+//                1.0f, 1.0f  //右上
         };
         mTextureBuffer = BufferHelper.getFloatBuffer(TEXTURE);
 

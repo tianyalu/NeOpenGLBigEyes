@@ -117,6 +117,8 @@ public class CameraHelper implements Camera.PreviewCallback, SurfaceHolder.Callb
             mCamera = Camera.open(mCameraID);
             //配置Camera的属性
             Camera.Parameters parameters = mCamera.getParameters();
+            //自动对焦
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             //设置预览数据格式为nv21
             parameters.setPictureFormat(ImageFormat.NV21);
             //这里是摄像头预览尺寸（宽、高）

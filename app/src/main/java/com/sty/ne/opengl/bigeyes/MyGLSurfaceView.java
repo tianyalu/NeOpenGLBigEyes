@@ -3,6 +3,7 @@ package com.sty.ne.opengl.bigeyes;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 public class MyGLSurfaceView extends GLSurfaceView {
@@ -72,9 +73,29 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     /**
      * 开启大眼特效
+     *
      * @param isChecked
      */
     public void enableBigEyes(boolean isChecked) {
         mRender.enableBigEye(isChecked);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                //do nothing
+                break;
+            case MotionEvent.ACTION_UP:
+                switchCamera();
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    public void switchCamera() {
+        mRender.switchCamera();
     }
 }

@@ -211,4 +211,8 @@ class MyGLRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvaila
     public void onPreviewFrame(byte[] data, Camera camera) {
         mFaceTrack.detector(data);
     }
+
+    public void switchCamera() {
+        mCameraHelper.switchCamera();
+    }
 }
