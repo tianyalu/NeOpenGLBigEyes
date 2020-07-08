@@ -59,6 +59,4 @@ void FaceTrack::detector(Mat src, vector<Rect2f> &rects) {
             rects.push_back(Rect2f(points[i].x, points[i].y, 0, 0));
         }
     }
-
-
 }
