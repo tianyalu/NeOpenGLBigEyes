@@ -26,6 +26,7 @@ float fs(float r, float rmax) {
 //oldCoord: 旧的采样点坐标
 //eye: 眼睛坐标
 //rmax: 局部放大最大作用半径
+//在部分机型上，变量名和函数名同名的话会导致编译报错！
 vec2 calcNewCoord(vec2 oldCoord, vec2 eye, float rmax) {
     vec2 newCoord = oldCoord;
     float r = distance(oldCoord, eye);

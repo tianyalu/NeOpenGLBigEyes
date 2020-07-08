@@ -213,6 +213,7 @@ float fs(float r, float rmax) {
 //oldCoord: 旧的采样点坐标
 //eye: 眼睛坐标
 //rmax: 局部放大最大作用半径
+//在部分机型上，变量名和函数名同名的话会导致编译报错！
 vec2 calcNewCoord(vec2 oldCoord, vec2 eye, float rmax) {
     vec2 newCoord = oldCoord;
     float r = distance(oldCoord, eye);
@@ -283,4 +284,6 @@ public void onDrawFrame(GL10 gl10) {
 
 
 ## 五、遗留的疑问
-`BaseFilter.java`文件中`TEXTURE`改成原始未旋转状态，大眼滤镜效果才反而是正常的，百思不得其解。  
+~~`BaseFilter`类中`TEXTURE`改成原始未旋转状态，大眼滤镜效果才反而是正常的，百思不得其解。~~
+
+其实是在`BaseFilter`中保留原始图像样式，需要旋转的话在子类中复写`changeTextureData()`方法实现。

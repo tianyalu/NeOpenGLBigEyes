@@ -13,16 +13,19 @@ public class BaseFrameFilter extends BaseFilter{
         super(context, vertexSourceId, fragmentSourceId);
     }
 
+    /**
+     * 需要旋转的话继续在子类中实现
+     */
     @Override
     protected void changeTextureData() {
-        float[] TEXTURE = {
-                0.0f, 0.0f,
-                1.0f, 0.0f,
-                0.0f, 1.0f,
-                1.0f, 1.0f
-        };
-        mTextureBuffer.clear();
-        mTextureBuffer.put(TEXTURE);
+//        float[] TEXTURE = {
+//                0.0f, 0.0f,
+//                1.0f, 0.0f,
+//                0.0f, 1.0f,
+//                1.0f, 1.0f
+//        };
+//        mTextureBuffer.clear();
+//        mTextureBuffer.put(TEXTURE);
     }
 
     @Override

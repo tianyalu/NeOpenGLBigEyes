@@ -32,6 +32,21 @@ public class BigEyeFilter extends BaseFrameFilter {
         right = ByteBuffer.allocateDirect(2 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
     }
 
+    /**
+     * 图像旋转镜像操作
+     */
+    @Override
+    protected void changeTextureData() {
+        float[] TEXTURE = {
+                0.0f, 0.0f,
+                1.0f, 0.0f,
+                0.0f, 1.0f,
+                1.0f, 1.0f,
+        };
+        mTextureBuffer.clear();
+        mTextureBuffer.put(TEXTURE);
+    }
+
     @Override
     public int onDrawFrame(int textureId) {
         if(mFace == null) {

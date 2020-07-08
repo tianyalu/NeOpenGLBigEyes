@@ -40,7 +40,7 @@ public class BaseFilter {
         mVertexBuffer = BufferHelper.getFloatBuffer(VERTEX);
 
         //参考：https://www.jianshu.com/p/c4dda6884655  Android屏幕坐标系.png
-        //todo 疑问： 这里偷偷地改回去了，但大眼滤镜效果反而是正常的，百思不得其解
+        //这里维持图像未旋转的状态，需要旋转的话在子类中实现
         float[] TEXTURE = {
                 0.0f, 1.0f, //左下
                 1.0f, 1.0f, //右下
